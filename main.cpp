@@ -79,7 +79,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 描画終了
 		dxCommon->PostDraw();
 	}
-	//aaaaa
 	// 各種解放
 	SafeDelete(gameScene);
 	audio->Finalize();
