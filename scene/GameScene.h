@@ -51,11 +51,21 @@ class GameScene {
 	///3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_[10];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//値を表示したい変数
 	int32_t value_ = 0;
+	enum PartId {
+		Root,
+		Chest,
+		Head,
+		ArmL,
+	    ArmR,
+		Hip,
+		LegL,
+		LegR
+	};
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
