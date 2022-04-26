@@ -51,7 +51,7 @@ class GameScene {
 	///3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_[18];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//値を表示したい変数
