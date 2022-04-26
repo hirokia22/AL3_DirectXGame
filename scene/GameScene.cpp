@@ -19,13 +19,12 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	for (int i = 0; i < _countof(worldTransform_[0]); i++) {
 		for (int j = 0; j < _countof(worldTransform_[0]); j++) {
-			int numX = i % 2;
-			int numY = j % 2;
-			if (numX == 0 || numY == 0) {
-				worldTransform_[i][j].scale_ = {1, 1, 1};
-				worldTransform_[i][j].translation_ = {(i * 5) - 20.0f, (j * 5)-20.0f, 10.0f};
+			for (int m = 0; m < _countof(worldTransform_[0]); m++) {
+				worldTransform_[i][j][m].scale_ = {1, 1, 1};
+				worldTransform_[i][j][m].translation_ = {
+				  (i *3) - 12.0f, (j *3) - 12.0f, (m * 3) + 5.0f};
+				worldTransform_[i][j][m].Initialize();
 			}
-			worldTransform_[i][j].Initialize();
 		}
 	}
 	//ビュープロジェクションの初期化
@@ -63,10 +62,8 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画
 	for (int i = 0; i < _countof(worldTransform_); i++) {
 		for (int j = 0; j < _countof(worldTransform_); j++) {
-			int numX = i % 2;
-			int numY = j % 2;
-			if (numX == 0 || numY == 0) {
-				model_->Draw(worldTransform_[i][j], viewProjection_, textureHandle_);
+			for (int m = 0; m < _countof(worldTransform_); m++) {
+				model_->Draw(worldTransform_[i][j][m], viewProjection_, textureHandle_);
 			}
 		}
 	}
