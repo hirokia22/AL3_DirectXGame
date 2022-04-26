@@ -1,12 +1,13 @@
 ﻿#include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <cmath>
 
 using namespace DirectX;
 
-GameScene::GameScene() {}
+GameScene::GameScene(){};
 
-GameScene::~GameScene() { delete model_;}
+GameScene::~GameScene() { delete model_; }
 
 void GameScene::Initialize() {
 
@@ -16,26 +17,22 @@ void GameScene::Initialize() {
 	debugText_ = DebugText::GetInstance();
 	textureHandle_ = TextureManager::Load("Mario.jpg");
 	model_ = Model::Create();
-	for (int i = 0; i < _countof(worldTransform_); i++) {
-		//スケール
-		worldTransform_[i].scale_ = {5.0f, 5.0f, 5.0f};
-		if (i <= 9) {
-			//平行移動
-			worldTransform_[i].translation_ = {-50.0f + (i*10), 20.0f, -5};
-		} else {
-			worldTransform_[i].translation_ = {-135.0f + (i * 10), -20.0f, -5};
+	for (int i = 0; i < _countof(worldTransform_[0]); i++) {
+		for (int j = 0; j < _countof(worldTransform_[0]); j++) {
+			int numX = i % 2;
+			int numY = j % 2;
+			if (numX == 0 || numY == 0) {
+				worldTransform_[i][j].scale_ = {1, 1, 1};
+				worldTransform_[i][j].translation_ = {(i * 5) - 20.0f, (j * 5)-20.0f, 10.0f};
+			}
+			worldTransform_[i][j].Initialize();
 		}
-		
-		//ワールドトランスフォームの初期化
-		worldTransform_[i].Initialize();
 	}
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {
-
-}
+void GameScene::Update() {}
 
 void GameScene::Draw() {
 
@@ -65,9 +62,15 @@ void GameScene::Draw() {
 	/// </summary>
 	// 3Dオブジェクト描画
 	for (int i = 0; i < _countof(worldTransform_); i++) {
-		model_->Draw(worldTransform_[i], viewProjection_, textureHandle_);
+		for (int j = 0; j < _countof(worldTransform_); j++) {
+			int numX = i % 2;
+			int numY = j % 2;
+			if (numX == 0 || numY == 0) {
+				model_->Draw(worldTransform_[i][j], viewProjection_, textureHandle_);
+			}
+		}
 	}
-	
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
