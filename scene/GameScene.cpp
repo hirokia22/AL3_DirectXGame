@@ -17,21 +17,28 @@ void GameScene::Initialize() {
 	debugText_ = DebugText::GetInstance();
 	textureHandle_ = TextureManager::Load("Mario.jpg");
 	model_ = Model::Create();
-	for (int i = 0; i < _countof(worldTransform_[0]); i++) {
-		for (int j = 0; j < _countof(worldTransform_[0]); j++) {
-			for (int m = 0; m < _countof(worldTransform_[0]); m++) {
-				worldTransform_[i][j][m].scale_ = {1, 1, 1};
-				worldTransform_[i][j][m].translation_ = {
-				  (i *3) - 12.0f, (j *3) - 12.0f, (m * 3) + 5.0f};
-				worldTransform_[i][j][m].Initialize();
-			}
-		}
+	worldTransform_[0].Initialize();
+	for (int i = 1; i < _countof(worldTransform_); i++) {
+		worldTransform_[i].translation_ = {
+		  8.0f*(cosf((XM_PI / 5.0f)*i) - sinf((XM_PI / 5.0f)*i)), 8.0f*(cosf((XM_PI/5.0f)*i)+sinf((XM_PI/5.0f)*i)),0
+		 };
+		worldTransform_[i].parent_ = &worldTransform_[0];
+		worldTransform_[i].Initialize();
 	}
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() { 
+	const float rotate = 0.04f;
+	worldTransform_[0].rotation_.z += rotate;
+	for (int i = 1; i < _countof(worldTransform_); i++) {
+		worldTransform_[i].rotation_.z -= rotate;
+	}
+	for (int i = 0; i <= 10; i++) {
+		worldTransform_[i].UpdateMatrix();
+	}
+}
 
 void GameScene::Draw() {
 
@@ -60,12 +67,8 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	// 3Dオブジェクト描画
-	for (int i = 0; i < _countof(worldTransform_); i++) {
-		for (int j = 0; j < _countof(worldTransform_); j++) {
-			for (int m = 0; m < _countof(worldTransform_); m++) {
-				model_->Draw(worldTransform_[i][j][m], viewProjection_, textureHandle_);
-			}
-		}
+	for (int i = 1; i < _countof(worldTransform_); i++) {
+		model_->Draw(worldTransform_[i], viewProjection_, textureHandle_);
 	}
 
 	// 3Dオブジェクト描画後処理
@@ -87,3 +90,4 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
